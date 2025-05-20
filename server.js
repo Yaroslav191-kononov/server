@@ -11,7 +11,7 @@ const redis = require('redis');
 const { RedisStore } = require('connect-redis');
 const app = express();
 const redisClient = redis.createClient({
-    url: process.env.RESID_URL, // или REDIS_HOST, REDIS_PORT, REDIS_PASSWORD
+    url: process.env.REDIS_URL, // или REDIS_HOST, REDIS_PORT, REDIS_PASSWORD
 });
 redisClient.connect().catch(console.error);
 let redisStore = new RedisStore({
