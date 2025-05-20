@@ -7,8 +7,28 @@ const session= require( 'express-session');
 const httpsLocalhost=  require( "https-localhost");
 const https =require('https');
 const fs =require( 'fs');
-const { verbose } = sqlite3;
+const redis = require('redis');
+const { RedisStore } = require('connect-redis');
 const app = express();
+const redisClient = redis.createClient({
+    url: process.env.RESID_URL, // или REDIS_HOST, REDIS_PORT, REDIS_PASSWORD
+});
+redisClient.connect().catch(console.error);
+let redisStore = new RedisStore({
+  client: redisClient,
+});
+app.use(session({
+  store: redisStore,
+  secret: process.env.SESSION_SECRET || '@45erere/;:67WER&ER9(304_DEff#Efdgdf',
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true, 
+    maxAge: 24 * 60 * 60 * 1000
+  }
+}));
+const { verbose } = sqlite3;
 const httpsServer = httpsLocalhost();
 const corsOptions = {
   origin: [
@@ -18,12 +38,6 @@ const corsOptions = {
   credentials: true,  
 };
 app.use(cors(corsOptions));
-app.use(session({
-  secret: '@45erere/;:67WER&ER9(304_DEff#Efdgdf',
-  resave: false,
-  saveUninitialized: false,
-  cookie: { secure: true }
-}));
 const db = new sqlite3.Database('mydatabase.db');
 app.use(bodyParser.json()); 
 app.post('/api/check', (req, res) => {
