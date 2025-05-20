@@ -17,6 +17,9 @@ redisClient.connect().catch(console.error);
 let redisStore = new RedisStore({
   client: redisClient,
 });
+redisClient.on('error', (err) => {
+  console.error('Redis error:', err);
+});
 app.use(session({
   store: redisStore,
   secret: process.env.SESSION_SECRET || '@45erere/;:67WER&ER9(304_DEff#Efdgdf',
