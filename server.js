@@ -12,8 +12,7 @@ const app = express();
 const httpsServer = httpsLocalhost();
 const corsOptions = {
   origin: [
-    'http://localhost:8100',
-    'https://localhost:3000'
+    'https://localhost'
   ],
   credentials: true,  
 };
