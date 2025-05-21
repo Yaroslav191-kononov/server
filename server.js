@@ -14,13 +14,21 @@ console.log(process.env.REDIS_URL);
 const redisClient = redis.createClient({
     url: process.env.REDIS_URL,
 });
-redisClient.connect().catch(console.error);
-let redisStore = new RedisStore({
-  client: redisClient,
+redisClient.on('error', (err) => {
+  console.error('Redis error:', err);
 });
-// redisClient.on('error', (err) => {
-//   console.error('Redis error:', err);
-// });
+
+let redisStore; // Объявите redisStore здесь
+
+(async () => {
+  try {
+    await redisClient.connect();
+    console.log('✅ Redis подключен!');
+
+    redisStore = new RedisStore({ // Инициализируйте после подключения
+      client: redisClient,
+    });
+
 app.use(session({
   store: redisStore,
   secret: process.env.SESSION_SECRET || '@45erere/;:67WER&ER9(304_DEff#Efdgdf',
@@ -344,6 +352,10 @@ app.post('/api/getAllVack', (req, res) => {
 // https.createServer(options, app).listen(3000, () => {
 //   console.log('Server listening on port 3000');
 // });
+;}catch (err) {
+    console.error('❌ Не удалось подключиться к Redis:', err);
+  }
+})();
 app.listen(3000, function(err){
     if (err) console.log("Error in server setup")
     console.log(3000);
