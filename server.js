@@ -9,7 +9,7 @@ const https = require('https');
 const fs = require('fs');
 const redis = require('redis');
 const { createClient } = redis; // Правильный импорт createClient
-const { RedisStore } = require('connect-redis');
+const RedisStore = require('connect-redis').default;
 
 const app = express();
 
