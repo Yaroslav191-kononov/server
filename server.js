@@ -35,7 +35,7 @@ app.post('/api/check', (req, res) => {
 });
 app.post('/api/addWork', (req, res) => {
     if(req.body.userId){
-      let date=new Date();
+      let date=new Date().toISOString().split('T')[0];
       const sql = `INSERT INTO \`profile\` (\`name\`, \`tag\`,\`kategory\`,\`date\`,\`userId\`,\`type\`,\`like\`) VALUES ('${req.body.name}', '${req.body.tag}','${req.body.kategory}','${date}','${req.body.userId}','${req.body.type}',0)`;
       db.run(sql, async function(err, result) {
         res.end(JSON.stringify(true));
@@ -47,7 +47,7 @@ app.post('/api/addWork', (req, res) => {
 });
 app.post('/api/addVack', (req, res) => {
     if(req.body.userId){
-      let date=new Date();
+      let date=new Date().toISOString().split('T')[0];
       const sql = `INSERT INTO \`Vacansi\` (\`name\`, \`about\`,\`cost\`,\`need\`,\`userId\`,\`type\`,\`location\`,\`date\`) VALUES ('${req.body.name}', '${req.body.about}','${req.body.cost}','${req.body.need}','${req.body.userId}','${req.body.type}','${req.body.location}','${date}')`;
       db.run(sql, async function(err, result) {
         res.end(JSON.stringify(true));
@@ -62,8 +62,9 @@ app.post('/api/addComm', (req, res) => {
       const sqlCheck = `SELECT * FROM \`Option\` WHERE \`profileID\`='${req.body.workId}' AND \`userId\`=${req.body.userId}`;
       db.all(sqlCheck, async function(err, resultSelect) {
         console.log(!resultSelect[0]);
+                console.log(!resultSelect[0]);
         if(!resultSelect[0]){
-          let date=new Date();
+          let date=new Date().toISOString().split('T')[0];
           const sql = `INSERT INTO \`Option\` (\`text\`,\`profileID\`,\`userId\`,\`date\`) VALUES ('${req.body.text}', '${req.body.workId}','${req.body.userId}','${date}')`;
           db.run(sql, async function(err, result) {
             res.end(JSON.stringify(true));
@@ -76,16 +77,15 @@ app.post('/api/addComm', (req, res) => {
       })
     }
     else{
-      console.log(req.body);
       res.end(JSON.stringify(false));
-    }
+    }   
 });
 app.post('/api/addUser', (req, res) => {
   const sql = `SELECT * FROM \`user\` WHERE \`name\`='${req.body.name}'`;
   db.all(sql, async function(err, result) {
     if(result.length==0){
       let hashedPassword = await bcrypt.hash(req.body.password, 10);
-      let date=new Date();
+      let date=new Date().toISOString().split('T')[0];
         const sqlAdd = `INSERT INTO \`user\` (\`name\`, \`password\`,\`role\`,\`email\`,\`phone\`,\`date\`) VALUES ('${req.body.name}', '${hashedPassword}','${req.body.role}','${req.body.email}','${req.body.phone}','${date}')`;
           db.run(sqlAdd, async function(err, resultAdd) {
              db.all(sql, async function(err, resultSelect) {
