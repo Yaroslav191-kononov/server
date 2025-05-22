@@ -62,7 +62,6 @@ app.post('/api/addComm', (req, res) => {
       const sqlCheck = `SELECT * FROM \`Option\` WHERE \`profileID\`='${req.body.workId}' AND \`userId\`=${req.body.userId}`;
       db.all(sqlCheck, async function(err, resultSelect) {
         console.log(!resultSelect[0]);
-                console.log(!resultSelect[0]);
         if(!resultSelect[0]){
           let date=new Date();
           const sql = `INSERT INTO \`Option\` (\`text\`,\`profileID\`,\`userId\`,\`date\`) VALUES ('${req.body.text}', '${req.body.workId}','${req.body.userId}','${date}')`;
@@ -77,6 +76,7 @@ app.post('/api/addComm', (req, res) => {
       })
     }
     else{
+      console.log(req.body);
       res.end(JSON.stringify(false));
     }
 });
