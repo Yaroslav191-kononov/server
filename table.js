@@ -10,6 +10,7 @@ const createTableProfile = `
         date TEXT NOT NULL,
         type TEXT NOT NULL,
         like INTEGER NOT NULL,
+        view INTEGER NOT NULL,
         userId INTEGER NOT NULL
     )`;  
 db.run(createTableProfile, (err) => { 

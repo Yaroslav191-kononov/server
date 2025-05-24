@@ -179,6 +179,21 @@ app.post('/api/getOneLike', async (req, res) => {
     res.end(JSON.stringify(false));
   }
 });
+app.post('/api/getOneView', async (req, res) => {
+  if(req.body.workId){
+    const sql = `SELECT * FROM \`profile\` WHERE \`id_profile\`='${req.body.workId}'`;
+    db.all(sql, async function(err, result) {
+      let view=result[0].view+1;
+      let sqlUpdate=`UPDATE \`profile\` SET \`view\` = ${view} WHERE \`id_profile\`='${req.body.workId}'`;
+      db.run(sqlUpdate, async function(err, result) {
+        res.end(JSON.stringify(view));
+      });
+    });
+  }
+  else{
+    res.end(JSON.stringify(false));
+  }
+});
 app.post('/api/getAllKat', (req, res) => {
     const sql = `SELECT \`kategory\` FROM \`profile\` GROUP BY \`kategory\``;
     db.all(sql, async function(err, result) {
