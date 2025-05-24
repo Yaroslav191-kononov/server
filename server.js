@@ -45,6 +45,17 @@ app.post('/api/addWork', (req, res) => {
       res.end(JSON.stringify(false));
     }
 });
+app.post('/api/updateWork', async (req, res) => {
+  if(req.body.workId){
+    let sqlUpdate=`UPDATE \`profile\` SET \`name\` = '${req.body.name}',\`name\` = '${req.body.tag}',\`name\` = '${req.body.kategory}' WHERE \`id_profile\`='${req.body.workId}'`;
+    db.run(sqlUpdate, async function(err, result) {
+      res.end(JSON.stringify(true));
+    });
+  }
+  else{
+    res.end(JSON.stringify(false));
+  }
+});
 app.post('/api/addVack', (req, res) => {
     if(req.body.userId){
       let date=new Date().toISOString().split('T')[0];
