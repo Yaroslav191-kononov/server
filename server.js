@@ -47,7 +47,7 @@ app.post('/api/addWork', (req, res) => {
 });
 app.post('/api/updateWork', async (req, res) => {
   if(req.body.workId){
-    let sqlUpdate=`UPDATE \`profile\` SET \`name\` = '${req.body.name}',\`name\` = '${req.body.tag}',\`name\` = '${req.body.kategory}' WHERE \`id_profile\`='${req.body.workId}'`;
+    let sqlUpdate=`UPDATE \`profile\` SET \`name\` = '${req.body.name}',\`name\` = '${req.body.tag}',\`name\` = '${req.body.kategory}' WHERE \`id_profile\`=${req.body.workId}`;
     db.run(sqlUpdate, async function(err, result) {
       res.end(JSON.stringify(true));
     });
