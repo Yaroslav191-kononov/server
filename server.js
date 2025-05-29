@@ -24,10 +24,11 @@ const db = new sqlite3.Database('mydatabase.db');
 app.use(bodyParser.json()); 
 
 app.post('/api/check', (req, res) => {
-
+  console.log(req.body);
   const sql = `SELECT * FROM \`user\` WHERE \`name\`=?`;
 
   db.all(sql,[req.body.name], async function(err, result) {
+    console.log(err);
     if(result.length==0){
       res.end(JSON.stringify(false));
     }
