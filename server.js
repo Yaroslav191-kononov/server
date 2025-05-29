@@ -29,6 +29,7 @@ app.post('/api/check', (req, res) => {
 
   db.all(sql,[req.body.name], async function(err, result) {
     console.log(result);
+        console.log(err);
     if(result.length==0){
       res.end(JSON.stringify(false));
     }
