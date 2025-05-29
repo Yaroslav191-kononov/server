@@ -1,5 +1,6 @@
 const sqlite3 = require('sqlite3');
 const { verbose } = sqlite3;
+const bcrypt = require('bcryptjs');
 const db = new sqlite3.Database('mydatabase.db');
 
 const createTableProfile = ` 
@@ -83,12 +84,13 @@ db.run(createTableOption, (err) => {
         console.log('Таблица создана успешно'); 
     }
 });
-function addAdmin(name, password, email, phone, date, callback) {
+async function addAdmin(name, password, email, phone, date, callback) {
+    let hashedPassword = await bcrypt.hash(password, 10);
     const insertAdmin = `INSERT INTO \`user\` (\`name\`, \`password\`, \`role\`, \`email\`, \`phone\`, \`date\`) VALUES (?, ?, ?, ?, ?, ?)`;
 
     const adminRole = 'admin';  // Или другое значение, обозначающее роль администратора
 
-    db.run(insertAdmin, [name, password, adminRole, email, phone, date], function(err) {
+    db.run(insertAdmin, [name, hashedPassword, adminRole, email, phone, date], function(err) {
         if (err) {
             console.error('Ошибка добавления администратора:', err.message);
             return callback(err);
