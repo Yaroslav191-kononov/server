@@ -28,7 +28,7 @@ app.post('/api/check', (req, res) => {
   const sql = `SELECT * FROM \`user\` WHERE \`name\`=?`;
 
   db.all(sql,[req.body.name], async function(err, result) {
-    console.log(err);
+    console.log(result);
     if(result.length==0){
       res.end(JSON.stringify(false));
     }
