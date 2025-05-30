@@ -263,6 +263,17 @@ app.post('/api/getAllWork', (req, res) => {
     res.end(JSON.stringify(false));
   }
 });
+app.post('/api/getAllUser', (req, res) => {
+  if(req.body.userId){
+    const sql = `SELECT * FROM \`user\``;
+    db.all(sql, async function(err, result) {
+      res.end(JSON.stringify(result));
+    });
+  }
+  else{
+    res.end(JSON.stringify(false));
+  }
+});
 app.post('/api/getAllVack', (req, res) => {
     let sql = ``;
     if(!req.body.select && !req.body.selectDate){
