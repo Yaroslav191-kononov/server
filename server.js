@@ -56,6 +56,18 @@ app.post('/api/addWork', (req, res) => {
       res.end(JSON.stringify(false));
     }
 });
+app.post('/api/updateVAck', async (req, res) => {
+  if(req.body.vackId){
+    let sqlUpdate=`UPDATE \`Vacansi\` SET \`name\` = ?,\`about\` = ?,\`cost\` = ?,\`need\` = ?,\`type\` = ?,\`location\` = ? WHERE \`id\`=?`;
+
+    db.run(sqlUpdate,[req.body.name,req.body.about,req.body.cost,req.body.need,req.body.type,req.body.location,req.body.vackId], async function(err, result) {
+      res.end(JSON.stringify(true));
+    });
+  }
+  else{
+    res.end(JSON.stringify(false));
+  }
+});
 app.post('/api/updateWork', async (req, res) => {
   if(req.body.workId){
     let sqlUpdate=`UPDATE \`profile\` SET \`name\` = ?,\`tag\` = ?,\`kategory\` = ? WHERE \`id_profile\`=?`;
