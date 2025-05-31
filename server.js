@@ -82,9 +82,10 @@ app.post('/api/updateWork', async (req, res) => {
 });
 app.post('/api/updateComm', async (req, res) => {
   if(req.body.userId){
-    let sqlUpdate=`UPDATE \`Option\` SET \`text\` = ? WHERE \`userId\`=?`;
+    let sqlUpdate=`UPDATE \`Option\` SET \`text\` = ? WHERE \`userId\` = ?`;
 
     db.run(sqlUpdate,[req.body.text,req.body.userId], async function(err, result) {
+      console.log(err);
       res.end(JSON.stringify(true));
     });
   }
@@ -148,9 +149,9 @@ app.post('/api/addUser', (req, res) => {
   });
 });
 app.post('/api/getProfil', (req, res) => {
-  if(req.body.userId){
+  if(req.body.commId){
     const sql = `SELECT * FROM \`user\` WHERE \`id\`=?`;
-    db.all(sql,[req.body.userId], async function(err, result) {
+    db.all(sql,[req.body.commId], async function(err, result) {
       res.end(JSON.stringify(result));
   });
   }
