@@ -318,7 +318,7 @@ app.post('/api/banned', (req, res) => {
 });
 app.post('/api/unBanned', (req, res) => {
   if(req.body.userId){
-    const sql = `UPDATE \`user\` SET \`ban\` = NULL WHERE \`id\`=?`;
+    const sql = `UPDATE \`user\` SET \`ban\` = 'unban' WHERE \`id\`=?`;
     
     db.run(sql,[req.body.userId], async function(err, result) {
       res.end(JSON.stringify(true));
