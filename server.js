@@ -149,9 +149,9 @@ app.post('/api/addUser', (req, res) => {
   });
 });
 app.post('/api/getProfil', (req, res) => {
-  if(req.body.commId){
+  if(req.body.userId){
     const sql = `SELECT * FROM \`user\` WHERE \`id\`=?`;
-    db.all(sql,[req.body.commId], async function(err, result) {
+    db.all(sql,[req.body.userId], async function(err, result) {
       res.end(JSON.stringify(result));
   });
   }
