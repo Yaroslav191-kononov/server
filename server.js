@@ -308,7 +308,19 @@ app.post('/api/banned', (req, res) => {
   if(req.body.userId){
     const sql = `UPDATE \`user\` SET \`ban\` = 'ban' WHERE \`id\`=?`;
     
-    db.all(sql,[req.body.userId], async function(err, result) {
+    db.run(sql,[req.body.userId], async function(err, result) {
+      res.end(JSON.stringify(true));
+    });
+  }
+  else{
+    res.end(JSON.stringify(false));
+  }
+});
+app.post('/api/unBanned', (req, res) => {
+  if(req.body.userId){
+    const sql = `UPDATE \`user\` SET \`ban\` = NULL WHERE \`id\`=?`;
+    
+    db.run(sql,[req.body.userId], async function(err, result) {
       res.end(JSON.stringify(true));
     });
   }
