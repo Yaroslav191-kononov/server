@@ -31,6 +31,7 @@ const createTableUser = `
         name TEXT NOT NULL, 
         password TEXT NOT NULL,
         role TEXT NOT NULL,
+        ban TEXT NULL,
         email TEXT NOT NULL,
         phone TEXT NOT NULL,
         date TEXT NOT NULL
