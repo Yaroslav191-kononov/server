@@ -56,7 +56,7 @@ app.post('/api/addWork', (req, res) => {
       res.end(JSON.stringify(false));
     }
 });
-app.post('/api/updateVAck', async (req, res) => {
+app.post('/api/updateVack', async (req, res) => {
   if(req.body.vackId){
     let sqlUpdate=`UPDATE \`Vacansi\` SET \`name\` = ?,\`about\` = ?,\`cost\` = ?,\`need\` = ?,\`type\` = ?,\`location\` = ? WHERE \`id\`=?`;
 
@@ -73,6 +73,18 @@ app.post('/api/updateWork', async (req, res) => {
     let sqlUpdate=`UPDATE \`profile\` SET \`name\` = ?,\`tag\` = ?,\`kategory\` = ? WHERE \`id_profile\`=?`;
 
     db.run(sqlUpdate,[req.body.name,req.body.tag,req.body.kategory,req.body.workId], async function(err, result) {
+      res.end(JSON.stringify(true));
+    });
+  }
+  else{
+    res.end(JSON.stringify(false));
+  }
+});
+app.post('/api/updateComm', async (req, res) => {
+  if(req.body.userId){
+    let sqlUpdate=`UPDATE \`Option\` SET \`tex\` = ?WHERE \`userId\`=?`;
+
+    db.run(sqlUpdate,[req.body.text,req.body.userId], async function(err, result) {
       res.end(JSON.stringify(true));
     });
   }
@@ -184,6 +196,17 @@ app.post('/api/getOneVack', (req, res) => {
     const sql = `SELECT * FROM \`Vacansi\` WHERE \`id\`=?`;
     db.all(sql,[req.body.vackId], async function(err, result) {
       res.end(JSON.stringify(result));
+    });
+  }
+  else{
+    res.end(JSON.stringify(false));
+  }
+});
+app.post('/api/getOneComm', async (req, res) => {
+  if(req.body.commId){
+    const sql = `SELECT * FROM \`Option\` WHERE \`id\`=?`;
+    db.all(sql,[req.body.commId], async function(err, result) {
+        res.end(JSON.stringify(result));
     });
   }
   else{
