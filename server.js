@@ -304,6 +304,18 @@ app.post('/api/getAllVack', (req, res) => {
       res.end(JSON.stringify(result));
     });
 });
+app.post('/api/banned', (req, res) => {
+  if(req.body.userId){
+    const sql = `UPDATE \`user\` SET \`ban\` = 'ban' WHERE \`id\`=?`;
+    
+    db.all(sql,[req.body.userId], async function(err, result) {
+      res.end(JSON.stringify(true));
+    });
+  }
+  else{
+    res.end(JSON.stringify(false));
+  }
+});
 // const options = {
 //   key: fs.readFileSync('localhost-key.pem'),
 //   cert: fs.readFileSync('localhost.pem')
