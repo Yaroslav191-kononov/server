@@ -11,7 +11,8 @@ const createTableProfile = `
         kategory TEXT NOT NULL,
         date TEXT NOT NULL,
         type TEXT NOT NULL,
-        like INTEGER NOT NULL,
+        point INTEGER NOT NULL,
+        rating INTEGER NOT NULL,
         view INTEGER NOT NULL,
         userId INTEGER NOT NULL
     )`;  
