@@ -83,10 +83,9 @@ app.post('/api/updateWork', async (req, res) => {
 app.post('/api/updateComm', async (req, res) => {
   if(req.body.commId){
     let sqlUpdate=`UPDATE \`Option\` SET \`text\` = ? WHERE \`id\` = ?`;
-    console.log(req.body.commId);
+
     db.run(sqlUpdate,[req.body.text,req.body.commId], async function(err, result) {
       console.log(err);
-      console.log(result);
       res.end(JSON.stringify(true));
     });
   }
@@ -226,14 +225,15 @@ app.post('/api/getComm', (req, res) => {
     res.end(JSON.stringify(false));
   }
 });
-app.post('/api/getOneLike', async (req, res) => {
+app.post('/api/setRaiting', async (req, res) => {
   if(req.body.workId){
-    const sql = `SELECT * FROM \`profile\` WHERE \`id_profile\`=?`;
+    const sql = `SELECT point, rating FROM profileWHERE id_profile = ?`;
     db.all(sql,[req.body.workId], async function(err, result) {
-      let like=result[0].like+req.body.step;
-      let sqlUpdate=`UPDATE \`profile\` SET \`like\` = ${like} WHERE \`id_profile\`=?`;
+      let point=result[0].point+1;
+      let rating=result[0].rating+req.body.rating;
+      let sqlUpdate=`UPDATE \`profile\` SET \`point\` = ${point},\`rating\` = ${rating} WHERE \`id_profile\`=?`;
       db.run(sqlUpdate,[req.body.workId], async function(err, result) {
-        res.end(JSON.stringify(like));
+        res.end(JSON.stringify(true));
       });
     });
   }
