@@ -152,6 +152,7 @@ app.post('/api/getProfil', (req, res) => {
   if(req.body.userId){
     const sql = `SELECT * FROM \`user\` WHERE \`id\`=?`;
     db.all(sql,[req.body.userId], async function(err, result) {
+      console.log(result);
       res.end(JSON.stringify(result));
   });
   }
