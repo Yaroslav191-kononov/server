@@ -83,9 +83,10 @@ app.post('/api/updateWork', async (req, res) => {
 app.post('/api/updateComm', async (req, res) => {
   if(req.body.commId){
     let sqlUpdate=`UPDATE \`Option\` SET \`text\` = ? WHERE \`id\` = ?`;
-
+    console.log(req.body.commId);
     db.run(sqlUpdate,[req.body.text,req.body.commId], async function(err, result) {
       console.log(err);
+      console.log(result);
       res.end(JSON.stringify(true));
     });
   }
