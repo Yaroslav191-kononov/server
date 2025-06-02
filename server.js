@@ -109,7 +109,7 @@ app.post('/api/addVack', (req, res) => {
 app.post('/api/addMessage', (req, res) => {
     if(req.body.user1){
       let date=new Date().toISOString().split('T')[0];
-      const sql = `INSERT INTO \`Vacansi\` (\`text\`,\`user1\`,\`user2\`,\`date\`) VALUES (?,?,?,?)`;
+      const sql = `INSERT INTO \`Message\` (\`text\`,\`user1\`,\`user2\`,\`date\`) VALUES (?,?,?,?)`;
 
       db.run(sql,[req.body.text,req.body.user1,req.body.user2,date], async function(err, result) {
         res.end(JSON.stringify(true));
