@@ -106,6 +106,19 @@ app.post('/api/addVack', (req, res) => {
       res.end(JSON.stringify(false));
     }
 });
+app.post('/api/addMessage', (req, res) => {
+    if(req.body.user1){
+      let date=new Date().toISOString().split('T')[0];
+      const sql = `INSERT INTO \`Vacansi\` (\`text\`,\`user1\`,\`user2\`,\`date\`) VALUES (?,?,?,?)`;
+
+      db.run(sql,[req.body.text,req.body.user1,req.body.user2,date], async function(err, result) {
+        res.end(JSON.stringify(true));
+      });
+    }  
+    else{
+      res.end(JSON.stringify(false));
+    }
+});
 app.post('/api/addComm', (req, res) => {
     if(req.body.userId && req.body.workId){
       const sqlCheck = `SELECT * FROM \`Option\` WHERE \`profileID\`=? AND \`userId\`=?`;
@@ -163,6 +176,17 @@ app.post('/api/getWork', (req, res) => {
   if(req.body.userId){
     const sql = `SELECT * FROM \`profile\` WHERE \`userId\`=?`;
     db.all(sql,[req.body.userId], async function(err, result) {
+      res.end(JSON.stringify(result));
+  });
+  }
+  else{
+    res.end(JSON.stringify(false));
+  }
+});
+app.post('/api/getMessage', (req, res) => {
+  if(req.body.user1){
+    const sql = `SELECT * FROM \`Message\` WHERE \`user1\`=? AND \`user2\`=?`;
+    db.all(sql,[req.body.user1,req.body.user2], async function(err, result) {
       res.end(JSON.stringify(result));
   });
   }
@@ -303,6 +327,17 @@ app.post('/api/getAllWork', (req, res) => {
 app.post('/api/getAllUser', (req, res) => {
   if(req.body.userId){
     const sql = `SELECT * FROM \`user\``;
+    db.all(sql, async function(err, result) {
+      res.end(JSON.stringify(result));
+    });
+  }
+  else{
+    res.end(JSON.stringify(false));
+  }
+});
+app.post('/api/getAllMessage', (req, res) => {
+  if(req.body.user1){
+    const sql = `SELECT * FROM \`Message\` WHERE \`user1\`=${req.body.user1}`;
     db.all(sql, async function(err, result) {
       res.end(JSON.stringify(result));
     });
