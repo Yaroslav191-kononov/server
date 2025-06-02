@@ -86,6 +86,25 @@ db.run(createTableOption, (err) => {
         console.log('Таблица создана успешно'); 
     }
 });
+
+const createTableMessage = ` 
+    CREATE TABLE IF NOT EXISTS Message ( 
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user1 INTEGER NOT NULL,
+        user2 INTEGER NOT NULL,
+        text TEXT NOT NULL,
+        date TEXT NOT NULL
+    )`; 
+    
+db.run(createTableMessage, (err) => { 
+    if (err) { 
+        return console.error('Ошибка создания таблицы:', err.message); 
+    }
+    else{
+        console.log('Таблица создана успешно'); 
+    }
+});
+
 async function addAdmin(name, password, email, phone, date, callback) {
     let hashedPassword = await bcrypt.hash(password, 10);
     const insertAdmin = `INSERT INTO \`user\` (\`name\`, \`password\`, \`role\`, \`email\`, \`phone\`, \`date\`) VALUES (?, ?, ?, ?, ?, ?)`;
