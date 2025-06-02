@@ -185,8 +185,8 @@ app.post('/api/getWork', (req, res) => {
 });
 app.post('/api/getMessage', (req, res) => {
   if(req.body.user1){
-    const sql = `SELECT * FROM \`Message\` WHERE \`user1\`=? AND \`user2\`=?`;
-    db.all(sql,[req.body.user1,req.body.user2], async function(err, result) {
+    const sql = `SELECT * FROM \`Message\` WHERE (\`user1\`=? AND \`user2\`=?) OR (\`user2\`=? AND \`user1\`=?)`;
+    db.all(sql,[req.body.user1,req.body.user2,req.body.user1,req.body.user2], async function(err, result) {
       if(result[0]){
         res.end(JSON.stringify(result));
       }
@@ -342,7 +342,7 @@ app.post('/api/getAllUser', (req, res) => {
 });
 app.post('/api/getAllMessage', (req, res) => {
   if(req.body.user1){
-    const sql = `SELECT * FROM \`Message\` WHERE \`user1\`=${req.body.user1} OR \`user2\`=${req.body.user1} GROP BY \`user1\``;
+    const sql = `SELECT * FROM \`Message\` WHERE \`user1\`=${req.body.user1} OR \`user2\`=${req.body.user1} ORDER BY \`user1\``;
     db.all(sql, async function(err, result) {
       res.end(JSON.stringify(result));
     });
