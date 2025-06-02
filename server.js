@@ -344,7 +344,7 @@ app.post('/api/getAllMessage', (req, res) => {
   if(req.body.user1){
     const sql =  `
         SELECT
-          id,
+          *,
           CASE
             WHEN user1 = ${req.body.user1} THEN user2
             ELSE user1
