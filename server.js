@@ -342,7 +342,23 @@ app.post('/api/getAllUser', (req, res) => {
 });
 app.post('/api/getAllMessage', (req, res) => {
   if(req.body.user1){
-    const sql = `SELECT * FROM \`Message\` WHERE \`user1\`=${req.body.user1} OR \`user2\`=${req.body.user1} ORDER BY \`user1\``;
+    const sql =  `
+        SELECT
+          id,
+          CASE
+            WHEN user1 = ${req.body.user1} THEN user2
+            ELSE user1
+          END AS interlocutor,
+          text,
+          date,
+          CASE
+            WHEN user1 = ${req.body.user1} THEN 1
+            ELSE 0
+          END AS isOutgoing
+        FROM Message
+        WHERE user1 = ${req.body.user1} OR user2 = ${req.body.user1}
+        ORDER BY date ASC;
+    `;
     db.all(sql, async function(err, result) {
       res.end(JSON.stringify(result));
     });
