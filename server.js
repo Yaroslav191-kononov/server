@@ -227,7 +227,7 @@ app.post('/api/getComm', (req, res) => {
 });
 app.post('/api/setRaiting', async (req, res) => {
   if(req.body.workId){
-    const sql = `SELECT point, rating FROM profileWHERE id_profile = ?`;
+    const sql = `SELECT \`point\`, \`rating\` FROM \`profile\` WHERE \`id_profile\` = ?`;
     db.all(sql,[req.body.workId], async function(err, result) {
       let point=result[0].point+1;
       let rating=result[0].rating+req.body.rating;
