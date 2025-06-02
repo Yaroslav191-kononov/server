@@ -342,7 +342,7 @@ app.post('/api/getAllUser', (req, res) => {
 });
 app.post('/api/getAllMessage', (req, res) => {
   if(req.body.user1){
-    const sql = `SELECT * FROM \`Message\` WHERE \`user1\`=${req.body.user1}`;
+    const sql = `SELECT * FROM \`Message\` WHERE \`user1\`=${req.body.user1} OR \`user2\`=${req.body.user1} GROP BY \`user1\``;
     db.all(sql, async function(err, result) {
       res.end(JSON.stringify(result));
     });
