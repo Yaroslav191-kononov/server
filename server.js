@@ -45,7 +45,7 @@ app.post('/api/check', (req, res) => {
 app.post('/api/addWork', (req, res) => {
     if(req.body.userId){
       let date=new Date().toISOString().split('T')[0];
-      const sql = `INSERT INTO \`profile\` (\`name\`, \`tag\`,\`kategory\`,\`date\`,\`userId\`,\`type\`,\`point\`,\`rating\`,\`view\`) VALUES (?,?,?,?,?,?,0,0)`;
+      const sql = `INSERT INTO \`profile\` (\`name\`, \`tag\`,\`kategory\`,\`date\`,\`userId\`,\`type\`,\`point\`,\`rating\`,\`view\`) VALUES (?,?,?,?,?,?,0,0,0)`;
 
       db.run(sql,[req.body.name,req.body.tag,req.body.kategory,date,req.body.userId,req.body.type], async function(err, result) {
         res.end(JSON.stringify(true));
