@@ -187,7 +187,12 @@ app.post('/api/getMessage', (req, res) => {
   if(req.body.user1){
     const sql = `SELECT * FROM \`Message\` WHERE \`user1\`=? AND \`user2\`=?`;
     db.all(sql,[req.body.user1,req.body.user2], async function(err, result) {
-      res.end(JSON.stringify(result));
+      if(result[0]){
+        res.end(JSON.stringify(result));
+      }
+      else{
+        res.end(JSON.stringify(false));
+      }
   });
   }
   else{
