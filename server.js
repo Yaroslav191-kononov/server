@@ -342,15 +342,29 @@ app.post('/api/getAllUser', (req, res) => {
 });
 app.post('/api/getAllMessage', (req, res) => {
   if(req.body.user1){
-    const sql = `
-      SELECT * FROM \`Message\`
-      WHERE user1 = ? OR user2 = ?
-      GROUP BY
-      user1,
-      user2,
-      text,
-      date
-      ORDER BY date ASC;`;
+    const sql = `SELECT
+    m.id,
+    m.user1,
+    m.user2,
+    m.text,
+    m.date
+    FROM
+    \`Message\` m
+    INNER JOIN (
+    SELECT
+        MIN(id) AS min_id
+    FROM
+        \`Message\`
+    WHERE
+        user1 = ? OR user2 = ?
+    GROUP BY
+        CASE
+            WHEN user1 < user2 THEN user1 || '_' || user2
+            ELSE user2 || '_' || user1
+        END
+        ) AS first_messages ON m.id = first_messages.min_id
+         ORDER BY
+         m.date ASC;`;
     db.all(sql,[req.body.user1, req.body.user1], async function(err, result) {
       console.log(err);
       res.end(JSON.stringify(result));
