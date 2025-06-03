@@ -342,24 +342,26 @@ app.post('/api/getAllUser', (req, res) => {
 });
 app.post('/api/getAllMessage', (req, res) => {
   if(req.body.user1){
-    const sql =  `
-        SELECT
-          *,
-          CASE
-            WHEN user1 = ${req.body.user1} THEN user2
-            ELSE user1
-          END AS interlocutor,
-          text,
-          date,
-          CASE
-            WHEN user1 = ${req.body.user1} THEN 1
-            ELSE 0
-          END AS isOutgoing
-        FROM Message
-        WHERE user1 = ${req.body.user1} OR user2 = ${req.body.user1}
-        ORDER BY user1 ASC;
+    const sql = `
+      SELECT
+        id,
+        user1,
+        user2,
+        text,
+        date,
+        CASE
+          WHEN user1 = ? THEN user2
+          ELSE user1
+        END AS interlocutor,
+        CASE
+          WHEN user1 = ? THEN 1
+          ELSE 0
+        END AS isOutgoing
+      FROM Message
+      WHERE user1 = ? OR user2 = ?
+      ORDER BY date ASC;
     `;
-    db.all(sql, async function(err, result) {
+    db.all(sql,[req.body.user1, req.body.user1, req.body.user1, req.body.user1], async function(err, result) {
       res.end(JSON.stringify(result));
     });
   }
