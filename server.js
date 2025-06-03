@@ -345,8 +345,8 @@ app.post('/api/getAllMessage', (req, res) => {
     const sql = `
       SELECT
     id,
-    MIN(user1, user2) AS user1,  -- Минимальное значение user1 или user2
-    MAX(user1, user2) AS user2,  -- Максимальное значение user1 или user2
+    MIN(user1, user2) AS user1,
+    MAX(user1, user2) AS user2,
     text,
     date
     FROM
@@ -354,13 +354,14 @@ app.post('/api/getAllMessage', (req, res) => {
     WHERE
     user1 = ? OR user2 = ?
     GROUP BY
-    LEAST(user1, user2), -- Группируем по паре пользователей
+    MIN(user1, user2),
     text,
     date
     ORDER BY
     date ASC;
     `;
     db.all(sql,[req.body.user1, req.body.user1], async function(err, result) {
+      console.log(err);
       res.end(JSON.stringify(result));
     });
   }
