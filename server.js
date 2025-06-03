@@ -360,10 +360,8 @@ FROM
 WHERE
     user1 = ? OR user2 = ?
 GROUP BY
-    CASE
-        WHEN user1 = ? THEN user2
-        ELSE user1
-    END,
+    user1,
+    user2,
     text,
     date
 ORDER BY
