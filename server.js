@@ -345,22 +345,31 @@ app.post('/api/getAllMessage', (req, res) => {
     const sql = `
       SELECT
     id,
-    MIN(user1, user2) AS user1,
-    MAX(user1, user2) AS user2,
+    CASE
+        WHEN user1 = ? THEN user1
+        ELSE user2
+    END AS user1,
+    CASE
+        WHEN user1 = ? THEN user2
+        ELSE user1
+    END AS user2,
     text,
     date
-    FROM
+FROM
     \`Message\`
-    WHERE
+WHERE
     user1 = ? OR user2 = ?
-    GROUP BY
-    MIN(user1, user2),
+GROUP BY
+    CASE
+        WHEN user1 = ? THEN user2
+        ELSE user1
+    END,
     text,
     date
-    ORDER BY
+ORDER BY
     date ASC;
     `;
-    db.all(sql,[req.body.user1, req.body.user1], async function(err, result) {
+    db.all(sql,[req.body.user1, req.body.user1, req.body.user1, req.body.user1, req.body.user1], async function(err, result) {
       console.log(err);
       res.end(JSON.stringify(result));
     });
