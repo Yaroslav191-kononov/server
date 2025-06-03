@@ -345,25 +345,33 @@ app.post('/api/getAllMessage', (req, res) => {
     const sql = `
       SELECT
     id,
-    CASE
-        WHEN user1 = ? THEN user1
-        ELSE user2
-    END AS user1,
-    CASE
-        WHEN user1 = ? THEN user2
-        ELSE user1
-    END AS user2,
-    text,
-    date
-FROM
-    \`Message\`
-WHERE
-    user1 = ? OR user2 = ?
-GROUP BY
     user1,
     user2,
     text,
     date
+FROM (
+    SELECT
+        id,
+        user1,
+        user2,
+        text,
+        date
+    FROM
+        \`Message\`
+    WHERE
+        user1 = ? AND user2 = ?  -- Сообщения, отправленные пользователем1 пользователю2
+    UNION ALL
+    SELECT
+        id,
+        user1,
+        user2,
+        text,
+        date
+    FROM
+        \`Message\`
+    WHERE
+        user1 = ? AND user2 = ?  -- Сообщения, отправленные пользователем2 пользователю1
+) AS combined_messages
 ORDER BY
     date ASC;
     `;
