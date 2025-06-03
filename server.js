@@ -344,24 +344,23 @@ app.post('/api/getAllMessage', (req, res) => {
   if(req.body.user1){
     const sql = `
       SELECT
-        id,
-        user1,
-        user2,
-        text,
-        date,
-        CASE
-          WHEN user1 = ? THEN user2
-          ELSE user1
-        END AS interlocutor,
-        CASE
-          WHEN user1 = ? THEN 1
-          ELSE 0
-        END AS isOutgoing
-      FROM Message
-      WHERE user1 = ? OR user2 = ?
-      ORDER BY date ASC;
+    id,
+    MIN(user1, user2) AS user1,  -- Минимальное значение user1 или user2
+    MAX(user1, user2) AS user2,  -- Максимальное значение user1 или user2
+    text,
+    date
+    FROM
+    \`Message\`
+    WHERE
+    user1 = ? OR user2 = ?
+    GROUP BY
+    LEAST(user1, user2), -- Группируем по паре пользователей
+    text,
+    date
+    ORDER BY
+    date ASC;
     `;
-    db.all(sql,[req.body.user1, req.body.user1, req.body.user1, req.body.user1], async function(err, result) {
+    db.all(sql,[req.body.user1, req.body.user1], async function(err, result) {
       res.end(JSON.stringify(result));
     });
   }
