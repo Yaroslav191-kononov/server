@@ -367,7 +367,7 @@ GROUP BY
 ORDER BY
     date ASC;
     `;
-    db.all(sql,[req.body.user1, req.body.user1, req.body.user1, req.body.user1, req.body.user1], async function(err, result) {
+    db.all(sql,[req.body.user1, req.body.user1, req.body.user1, req.body.user1], async function(err, result) {
       console.log(err);
       res.end(JSON.stringify(result));
     });
