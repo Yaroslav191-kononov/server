@@ -343,39 +343,15 @@ app.post('/api/getAllUser', (req, res) => {
 app.post('/api/getAllMessage', (req, res) => {
   if(req.body.user1){
     const sql = `
-      SELECT
-    id,
-    user1,
-    user2,
-    text,
-    date
-FROM (
-    SELECT
-        id,
-        user1,
-        user2,
-        text,
-        date
-    FROM
-        \`Message\`
-    WHERE
-        user1 = ? AND user2 = ?  -- Сообщения, отправленные пользователем1 пользователю2
-    UNION ALL
-    SELECT
-        id,
-        user1,
-        user2,
-        text,
-        date
-    FROM
-        \`Message\`
-    WHERE
-        user1 = ? AND user2 = ?  -- Сообщения, отправленные пользователем2 пользователю1
-) AS combined_messages
-ORDER BY
-    date ASC;
-    `;
-    db.all(sql,[req.body.user1, req.body.user1, req.body.user1, req.body.user1], async function(err, result) {
+      SELECT * FROM \`Message\`
+      WHERE user1 = ? OR user2 = ?
+      GROUP BY
+      user1,
+      user2,
+      text,
+      date
+      ORDER BY date ASC;`;
+    db.all(sql,[req.body.user1, req.body.user1], async function(err, result) {
       console.log(err);
       res.end(JSON.stringify(result));
     });
