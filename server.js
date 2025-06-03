@@ -357,7 +357,7 @@ app.post('/api/getAllMessage', (req, res) => {
           END AS isOutgoing
         FROM Message
         WHERE user1 = ${req.body.user1} OR user2 = ${req.body.user1}
-        ORDER BY date ASC;
+        ORDER BY user1 ASC;
     `;
     db.all(sql, async function(err, result) {
       res.end(JSON.stringify(result));
