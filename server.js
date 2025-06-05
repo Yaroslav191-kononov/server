@@ -308,13 +308,13 @@ app.post('/api/getAllWork', (req, res) => {
     const sql = `SELECT * FROM \`user\` WHERE \`id\`='${req.body.userId}'`;
     db.all(sql, async function(err, result) {
       let sqlSelect='';
-      if(result[0].role=="boss" && !req.body.select){
+      if((result[0].role=="boss" || result[0].role=="admin") && !req.body.select){
         sqlSelect = `SELECT * FROM \`profile\``;
       }
       else if( result[0].role=="student" && !req.body.select){
         sqlSelect = `SELECT * FROM \`profile\` WHERE \`type\`='All'`;
       }
-      else if( result[0].role=="boss" && req.body.select){
+      else if( (result[0].role=="boss" || result[0].role=="admin") && req.body.select){
         sqlSelect = `SELECT * FROM \`profile\` WHERE \`kategory\`='${req.body.select}'`;
       }
       else if( result[0].role=="student" && req.body.select){
