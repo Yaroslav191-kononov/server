@@ -258,7 +258,7 @@ app.post('/api/setRaiting', async (req, res) => {
   if(req.body.workId){
     const sql = `SELECT \`point\`, \`rating\` FROM \`profile\` WHERE \`id_profile\` = ?`;
     db.all(sql,[req.body.workId], async function(err, result) {
-      let point=result[0].point+1;
+      let point=result[0].point+req.body.step;
       let rating=result[0].rating+req.body.rating;
       let sqlUpdate=`UPDATE \`profile\` SET \`point\` = ${point},\`rating\` = ${rating} WHERE \`id_profile\`=?`;
       db.run(sqlUpdate,[req.body.workId], async function(err, result) {
