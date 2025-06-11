@@ -336,7 +336,7 @@ app.post('/api/getAllWork', (req, res) => {
 });
 app.post('/api/getAllUser', (req, res) => {
   if(req.body.userId){
-    const sql = ``;
+    let sql = ``;
     if(req.body.select=='false'){
       sql = `SELECT * FROM \`user\` `;
     }
@@ -344,6 +344,7 @@ app.post('/api/getAllUser', (req, res) => {
       sql = `SELECT * FROM \`user\` WHERE \`verification\`='no'`;
     }
     db.all(sql, async function(err, result) {
+      console.log(err)
       res.end(JSON.stringify(result));
     });
   }
