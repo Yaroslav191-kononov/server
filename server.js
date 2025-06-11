@@ -148,8 +148,13 @@ app.post('/api/addUser', (req, res) => {
     if(result.length==0){
       let hashedPassword = await bcrypt.hash(req.body.password, 10);
       let date=new Date().toISOString().split('T')[0];
-      const sqlAdd = `INSERT INTO \`user\` (\`name\`, \`password\`,\`role\`,\`email\`,\`phone\`,\`date\`) VALUES (?,?,?,?,?,?)`;
-      
+      const sqlAdd='';
+      if(req.body.role=='boss'){
+        sqlAdd = `INSERT INTO \`user\` (\`name\`, \`password\`,\`role\`,\`email\`,\`phone\`,\`date\`,\`verification\`) VALUES (?,?,?,?,?,?,'no')`;
+      }
+      else{
+        sqlAdd = `INSERT INTO \`user\` (\`name\`, \`password\`,\`role\`,\`email\`,\`phone\`,\`date\`,\`verification\`) VALUES (?,?,?,?,?,?,'yes')`;
+      }
       db.run(sqlAdd,[req.body.name,hashedPassword,req.body.role,req.body.email,req.body.phone,date], async function(err, resultAdd) {
         db.all(sql,[req.body.name], async function(err, resultSelect) {
           res.end(JSON.stringify(resultSelect[0].id));
@@ -331,7 +336,13 @@ app.post('/api/getAllWork', (req, res) => {
 });
 app.post('/api/getAllUser', (req, res) => {
   if(req.body.userId){
-    const sql = `SELECT * FROM \`user\``;
+    const sql = ``;
+    if(req.body.select=='false'){
+      sql = `SELECT * FROM \`user\` `;
+    }
+    else{
+      sql = `SELECT * FROM \`user\` WHERE \`verification\`!='yes'`;
+    }
     db.all(sql, async function(err, result) {
       res.end(JSON.stringify(result));
     });
@@ -407,6 +418,18 @@ app.post('/api/banned', (req, res) => {
 app.post('/api/unBanned', (req, res) => {
   if(req.body.userId){
     const sql = `UPDATE \`user\` SET \`ban\` = 'unban' WHERE \`id\`=?`;
+    
+    db.run(sql,[req.body.userId], async function(err, result) {
+      res.end(JSON.stringify(true));
+    });
+  }
+  else{
+    res.end(JSON.stringify(false));
+  }
+});
+app.post('/api/verification', (req, res) => {
+  if(req.body.userId){
+    const sql = `UPDATE \`user\` SET \`verification\` = 'yes' WHERE \`id\`=?`;
     
     db.run(sql,[req.body.userId], async function(err, result) {
       res.end(JSON.stringify(true));
