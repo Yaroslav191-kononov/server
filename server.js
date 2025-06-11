@@ -341,7 +341,7 @@ app.post('/api/getAllUser', (req, res) => {
       sql = `SELECT * FROM \`user\` `;
     }
     else{
-      sql = `SELECT * FROM \`user\` WHERE \`verification\`!='yes'`;
+      sql = `SELECT * FROM \`user\` WHERE \`verification\`='no'`;
     }
     db.all(sql, async function(err, result) {
       res.end(JSON.stringify(result));
