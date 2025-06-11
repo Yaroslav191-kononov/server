@@ -148,7 +148,7 @@ app.post('/api/addUser', (req, res) => {
     if(result.length==0){
       let hashedPassword = await bcrypt.hash(req.body.password, 10);
       let date=new Date().toISOString().split('T')[0];
-      const sqlAdd='';
+      let sqlAdd='';
       if(req.body.role=='boss'){
         sqlAdd = `INSERT INTO \`user\` (\`name\`, \`password\`,\`role\`,\`email\`,\`phone\`,\`date\`,\`verification\`) VALUES (?,?,?,?,?,?,'no')`;
       }
@@ -440,14 +440,6 @@ app.post('/api/verification', (req, res) => {
     res.end(JSON.stringify(false));
   }
 });
-// const options = {
-//   key: fs.readFileSync('localhost-key.pem'),
-//   cert: fs.readFileSync('localhost.pem')
-// };
-
-// https.createServer(options, app).listen(3000, () => {
-//   console.log('Server listening on port 3000');
-// });
 app.listen(3000, function(err){
     if (err) console.log("Error in server setup")
     console.log(3000);
