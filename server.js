@@ -3,11 +3,11 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const sqlite3 = require('sqlite3');
 const bcrypt = require('bcryptjs');
+const multer = require('multer');
 const httpsLocalhost = require("https-localhost");
 
 const app = express();
 const { verbose } = sqlite3;
-//const httpsServer = httpsLocalhost();
 
 const corsOptions = {
   origin: [
@@ -16,6 +16,18 @@ const corsOptions = {
   ],
   credentials: true,  
 };
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const ext = path.extname(file.originalname);
+    cb(null, file.fieldname + '-' + uniqueSuffix + ext);
+  },
+});
+const upload = multer({ storage: storage });
 
 app.use(cors(corsOptions));
 
@@ -45,9 +57,10 @@ app.post('/api/check', (req, res) => {
 app.post('/api/addWork', (req, res) => {
     if(req.body.userId){
       let date=new Date().toISOString().split('T')[0];
-      const sql = `INSERT INTO \`profile\` (\`name\`, \`tag\`,\`kategory\`,\`date\`,\`userId\`,\`type\`,\`point\`,\`rating\`,\`view\`) VALUES (?,?,?,?,?,?,0,0,0)`;
-
-      db.run(sql,[req.body.name,req.body.tag,req.body.kategory,date,req.body.userId,req.body.type], async function(err, result) {
+      const sql = `INSERT INTO \`profile\` (\`name\`, \`tag\`,\`kategory\`,\`date\`,\`userId\`,\`type\`,\`point\`,\`rating\`,\`view\`,\`files\`) VALUES (?,?,?,?,?,?,0,0,0,?)`;
+        console.log(err.body);
+      db.run(sql,[req.body.name,req.body.tag,req.body.kategory,date,req.body.userId,req.body.type,req.body.files], async function(err, result) {
+        console.log(err);
         res.end(JSON.stringify(true));
       });
 
@@ -440,6 +453,14 @@ app.post('/api/verification', (req, res) => {
     res.end(JSON.stringify(false));
   }
 });
+// const options = {
+//   key: fs.readFileSync('localhost-key.pem'),
+//   cert: fs.readFileSync('localhost.pem')
+// };
+
+// https.createServer(options, app).listen(3000, () => {
+//   console.log('Server listening on port 3000');
+// });
 app.listen(3000, function(err){
     if (err) console.log("Error in server setup")
     console.log(3000);

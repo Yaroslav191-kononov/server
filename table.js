@@ -14,6 +14,7 @@ const createTableProfile = `
         point INTEGER NOT NULL,
         rating INTEGER NOT NULL,
         view INTEGER NOT NULL,
+        files JSON NULL,
         userId INTEGER NOT NULL
     )`;  
 
@@ -77,9 +78,10 @@ async function addAdmin(db,name, password, email, phone, date, callback) {
     });
 }
 
-function insertUser(db, name, password, role, email, phone, verification, date, callback) {
+async function insertUser(db, name, password, role, email, phone, verification, date, callback) {
+    let hashedPassword = await bcrypt.hash(password, 10);
     const sql = `INSERT INTO user (name, password, role, ban, email, phone, verification, date) VALUES (?, ?, ?, NULL, ?, ?, ?, ?)`;
-    db.run(sql, [name, password, role, email, phone, verification, date], function (err) {
+    db.run(sql, [name, hashedPassword, role, email, phone, verification, date], function (err) {
         if (err) {
             console.error("Error inserting user:", err.message);
         } else {
