@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const sqlite3 = require('sqlite3');
 const bcrypt = require('bcryptjs');
 const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 const httpsLocalhost = require("https-localhost");
 
 const app = express();
@@ -18,15 +20,17 @@ const corsOptions = {
 };
 
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads/');
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const ext = path.extname(file.originalname);
-    cb(null, file.fieldname + '-' + uniqueSuffix + ext);
-  },
-});
+    destination: (req, file, cb) => {
+      const uploadDir = path.join(__dirname, 'uploads');
+      fs.mkdirSync(uploadDir, { recursive: true });
+      cb(null, uploadDir);
+    },
+    filename: (req, file, cb) => {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      const ext = path.extname(file.originalname);
+      cb(null, file.fieldname + '-' + uniqueSuffix + ext);
+    },
+  });
 const upload = multer({ storage: storage });
 
 app.use(cors(corsOptions));
@@ -54,13 +58,11 @@ app.post('/api/check', (req, res) => {
     }
   });
 });
-app.post('/api/addWork', (req, res) => {
+app.post('/api/addWork',upload.array('files'), (req, res) => {
     if(req.body.userId){
       let date=new Date().toISOString().split('T')[0];
       const sql = `INSERT INTO \`profile\` (\`name\`, \`tag\`,\`kategory\`,\`date\`,\`userId\`,\`type\`,\`point\`,\`rating\`,\`view\`,\`files\`) VALUES (?,?,?,?,?,?,0,0,0,?)`;
-        console.log(err.body);
-      db.run(sql,[req.body.name,req.body.tag,req.body.kategory,date,req.body.userId,req.body.type,req.body.files], async function(err, result) {
-        console.log(err);
+      db.run(sql,[req.body.name,req.body.tag,req.body.kategory,date,req.body.userId,req.body.type,req.files], async function(err, result) {
         res.end(JSON.stringify(true));
       });
 
@@ -81,11 +83,11 @@ app.post('/api/updateVack', async (req, res) => {
     res.end(JSON.stringify(false));
   }
 });
-app.post('/api/updateWork', async (req, res) => {
+app.post('/api/updateWork',upload.array('files'), async (req, res) => {
   if(req.body.workId){
-    let sqlUpdate=`UPDATE \`profile\` SET \`name\` = ?,\`tag\` = ?,\`kategory\` = ? WHERE \`id_profile\`=?`;
+    let sqlUpdate=`UPDATE \`profile\` SET \`name\` = ?,\`tag\` = ?,\`kategory\` = ?,\`files\`=? WHERE \`id_profile\`=?`;
 
-    db.run(sqlUpdate,[req.body.name,req.body.tag,req.body.kategory,req.body.workId], async function(err, result) {
+    db.run(sqlUpdate,[req.body.name,req.body.tag,req.body.kategory,req.body.workId,req.files], async function(err, result) {
       res.end(JSON.stringify(true));
     });
   }
