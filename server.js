@@ -20,17 +20,17 @@ const corsOptions = {
 };
 
 const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      const uploadDir = path.join(__dirname, 'uploads');
-      fs.mkdirSync(uploadDir, { recursive: true });
-      cb(null, uploadDir);
-    },
-    filename: (req, file, cb) => {
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-      const ext = path.extname(file.originalname);
-      cb(null, file.fieldname + '-' + uniqueSuffix + ext);
-    },
-  });
+  destination: (req, file, cb) => {
+    const uploadDir = path.join(__dirname, 'uploads');
+    fs.mkdirSync(uploadDir, { recursive: true });
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const ext = path.extname(file.originalname);
+    cb(null, file.fieldname + '-' + uniqueSuffix + ext);
+  },
+});
 const upload = multer({ storage: storage });
 
 app.use(cors(corsOptions));
@@ -58,13 +58,27 @@ app.post('/api/check', (req, res) => {
     }
   });
 });
+app.get('/api/download/:filename', (req, res) => {
+  const filename = req.params.filename;
+  const filePath = path.join(__dirname, 'uploads', filename);
+  fs.access(filePath, fs.constants.F_OK, (err) => {
+    if (err) {
+      console.error("File not found:", err);
+      return res.status(404).send('File not found');
+    }
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.setHeader('Content-Type', 'application/octet-stream');
+    const fileStream = fs.createReadStream(filePath);
+    fileStream.pipe(res);
+  });
+});
 app.post('/api/addWork',upload.array('files'), (req, res) => {
     if(req.body.userId){
       let date=new Date().toISOString().split('T')[0];
       let filePaths = [];
       let filesJSON ;
       if (req.files && req.files.length > 0) {
-        filePaths = req.files.map(file => file.path);
+        filePaths = req.files.map(file => file.filename);
         filesJSON = JSON.stringify(filePaths);
       }
       else{
@@ -97,7 +111,7 @@ app.post('/api/updateWork',upload.array('files'), async (req, res) => {
     let filePaths = [];
     let filesJSON;
     if (req.files && req.files.length > 0) {
-      filePaths = req.files.map(file => file.path);
+      filePaths = req.files.map(file => file.filename);
       filesJSON = JSON.stringify(filePaths);
     }
     else{
