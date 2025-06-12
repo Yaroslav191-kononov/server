@@ -61,8 +61,17 @@ app.post('/api/check', (req, res) => {
 app.post('/api/addWork',upload.array('files'), (req, res) => {
     if(req.body.userId){
       let date=new Date().toISOString().split('T')[0];
+      let filePaths = [];
+      let filesJSON ;
+      if (req.files && req.files.length > 0) {
+        filePaths = req.files.map(file => file.path);
+        filesJSON = JSON.stringify(filePaths);
+      }
+      else{
+       filesJSON = 'NULL';
+      }
       const sql = `INSERT INTO \`profile\` (\`name\`, \`tag\`,\`kategory\`,\`date\`,\`userId\`,\`type\`,\`point\`,\`rating\`,\`view\`,\`files\`) VALUES (?,?,?,?,?,?,0,0,0,?)`;
-      db.run(sql,[req.body.name,req.body.tag,req.body.kategory,date,req.body.userId,req.body.type,req.files], async function(err, result) {
+      db.run(sql,[req.body.name,req.body.tag,req.body.kategory,date,req.body.userId,req.body.type,filesJSON], async function(err, result) {
         res.end(JSON.stringify(true));
       });
 
@@ -85,9 +94,18 @@ app.post('/api/updateVack', async (req, res) => {
 });
 app.post('/api/updateWork',upload.array('files'), async (req, res) => {
   if(req.body.workId){
+    let filePaths = [];
+    let filesJSON;
+    if (req.files && req.files.length > 0) {
+      filePaths = req.files.map(file => file.path);
+      filesJSON = JSON.stringify(filePaths);
+    }
+    else{
+      filesJSON = 'NULL';
+    }
     let sqlUpdate=`UPDATE \`profile\` SET \`name\` = ?,\`tag\` = ?,\`kategory\` = ?,\`files\`=? WHERE \`id_profile\`=?`;
 
-    db.run(sqlUpdate,[req.body.name,req.body.tag,req.body.kategory,req.body.workId,req.files], async function(err, result) {
+    db.run(sqlUpdate,[req.body.name,req.body.tag,req.body.kategory,req.body.workId,filesJSON], async function(err, result) {
       res.end(JSON.stringify(true));
     });
   }
