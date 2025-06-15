@@ -19,14 +19,14 @@ const corsOptions = {
   ],
   credentials: true,  
 };
-
+console.log("PASSWORD from Railway:", process.env.PASSWORD);
 const transporter = nodemailer.createTransport({
     host: 'smtp.mail.ru',
     port: 465,
     secure: true,
     auth: {
         user: 'studmarket39@mail.ru',
-        pass: process.env.PASSWORD,
+        pass: 'xOIloYeJBKIUuxAWb0jy',
     },
 });
 
