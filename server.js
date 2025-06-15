@@ -7,6 +7,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const httpsLocalhost = require("https-localhost");
+const nodemailer = require('nodemailer');
 
 const app = express();
 const { verbose } = sqlite3;

@@ -116,10 +116,10 @@ function insertVacancy(db, name, about, cost, need, type, location, userId, date
     });
 }
 const users = [
-    { name: "Employer1", password: "password1", role: "boss", email: "employer1@example.com", phone: "123-456-7890", verification: "yes", date: "2024-01-01" },
-    { name: "Employer2", password: "password2", role: "boss", email: "employer2@example.com", phone: "987-654-3210", verification: "yes", date: "2024-01-02" },
-    { name: "Student1", password: "password3", role: "student", email: "student1@example.com", phone: "555-123-4567", verification: "yes", date: "2024-01-03" },
-    { name: "Student2", password: "password4", role: "student", email: "student2@example.com", phone: "111-222-3333", verification: "yes", date: "2024-01-04" }
+    { name: "Employer1", password: "password1", role: "boss", email: "ersdddfxdfghh@gmail.com", phone: "123-456-7890", verification: "yes", date: "2024-01-01" },
+    { name: "Employer2", password: "password2", role: "boss", email: "ersdddfxdfghh@gmail.com", phone: "987-654-3210", verification: "yes", date: "2024-01-02" },
+    { name: "Student1", password: "password3", role: "student", email: "ersdddfxdfghh@gmail.com", phone: "555-123-4567", verification: "yes", date: "2024-01-03" },
+    { name: "Student2", password: "password4", role: "student", email: "ersdddfxdfghh@gmail.com", phone: "111-222-3333", verification: "yes", date: "2024-01-04" }
 ];
 
 const profiles = [
