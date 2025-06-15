@@ -19,6 +19,16 @@ const corsOptions = {
   credentials: true,  
 };
 
+const transporter = nodemailer.createTransport({
+    host: 'smtp.mail.ru',
+    port: 465,
+    secure: true,
+    auth: {
+        user: 'studmarket39@mail.ru',
+        pass: process.env.PASSWORD,
+    },
+});
+
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     const uploadDir = path.join(__dirname, 'uploads');
@@ -166,6 +176,18 @@ app.post('/api/addComm', (req, res) => {
           const sql = `INSERT INTO \`Option\` (\`text\`,\`profileID\`,\`userId\`,\`date\`) VALUES (?,?,?,?)`;
 
           db.run(sql,[req.body.text,req.body.workId,req.body.userId,date], async function(err, result) {
+            try {
+              const mailOptions = {
+                from: 'studmarket39@mail.ru',
+                to: req.body.email,
+                subject: "Оповешение",
+                text: "Вам оставили отзыв",
+              };
+              const info = await transporter.sendMail(mailOptions);
+              console.log('Email sent:', info.messageId);
+            } catch (error) {
+              console.error('Error sending email:', error);
+            }
             res.end(JSON.stringify(true));
           });
         }
