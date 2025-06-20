@@ -119,9 +119,9 @@ app.post('/api/updateVack', async (req, res) => {
 });
 app.post('/api/updateWork',upload.array('files'), async (req, res) => {
   if(req.body.workId){
-    let sqlUpdate=`UPDATE \`profile\` SET \`name\` = ?,\`tag\` = ?,\`kategory\` = ?,\`files\`=? WHERE \`id_profile\`=?`;
     let filePaths = [];
     let filesJSON;
+    let sqlUpdate=`UPDATE \`profile\` SET \`name\` = ?,\`tag\` = ?,\`kategory\` = ?,\`files\`=? WHERE \`id_profile\`=?`;
     if (req.files && req.files.length > 0) {
       filePaths = req.files.map(file => file.filename);
       filesJSON = JSON.stringify(filePaths);
@@ -129,7 +129,7 @@ app.post('/api/updateWork',upload.array('files'), async (req, res) => {
     else{
       filesJSON = 'NULL';
     }
-    db.run(sqlUpdate,[req.body.name,req.body.tag,req.body.kategory,req.body.workId,filesJSON], async function(err, result) {
+    db.run(sqlUpdate,[req.body.name,req.body.tag,req.body.kategory,filesJSON,req.body.workId], async function(err, result) {
       res.end(JSON.stringify(true));
     });
   }
